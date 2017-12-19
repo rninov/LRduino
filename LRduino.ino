@@ -11,11 +11,15 @@
 Bounce debouncer = Bounce();
 
 int choice = 0;
+int note = 127; //Max Note (range is 0-127)
+int velocity = 63; //Mid Velocity (range is 0-127)
+int channel = choice + 1; //MIDI Channel 1 (out of 16)
 
 MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial, MIDI, MySettings);
 void setup()
 {
     MIDI.begin();
+    // Serial.begin(115200);
     
     //Set up the LDCs number of columns and rows:
     lcd.begin(16, 2);
@@ -46,7 +50,8 @@ void loop()
     int BUTTON_0_VALUE = debouncer.read();
 
     if ((BUTTON_0_VALUE == LOW) && (millis() - BUTTON_0_DEBOUNCE_LAST >= DEBOUNCE_PERIOD))
-    {
+    {   
+
         //Set up the LCDs number of columns and rows:
         lcd.setCursor(0,0);
         lcd.print("                ");
@@ -60,7 +65,6 @@ void loop()
 
         // Serial.print("Choice: ");
         // Serial.print(choice);
-
         // Serial.print("  Setting: ");
         // Serial.println(settings[choice]);
 
@@ -74,21 +78,10 @@ void loop()
     //Clear the line each time it reaches the end
     //with 16 " " (spaces)
     lcd.print("                ");
+
+    channel = choice + 1;
     
-    //Iterate through each character on the second line
-    // for (int i=0; i<16; ++i)
-    // {
-    //     //Iterate through each progress value for each character
-    //     for (int j=0; j<5; j++)
-    // {
-    //     lcd.setCursor(i, 1);  //Move the cursor to this location
-    //     lcd.write(j);         //Update progress bar
-    //     delay(50);           //Wait
-    // }
-    // }
-
-
-    // RE
+    // Rotary Encoder
     if (!(digitalRead(PinSW))) {   // check if button is pressed
         if (RotaryPosition[channel] == 63) {  // check if button was already pressed
         } else {
@@ -102,10 +95,14 @@ void loop()
         PrevPosition[channel] = RotaryPosition[channel]; // Save previous position in variable
         if (rotationdirection) {
             RotaryPosition[channel]=RotaryPosition[channel]-1; // decrease Position by 1
+            // Serial.print("RotaryPosition[channel]: ");
+            // Serial.println(RotaryPosition[channel]);
         }
         
         else {
             RotaryPosition[channel]=RotaryPosition[channel]+1; // increase Position by 1
+            // Serial.print("RotaryPosition[channel]: ");
+            // Serial.println(RotaryPosition[channel]);
         }
 
         TurnDetected = false;  // do NOT repeat IF loop until new rotation detected

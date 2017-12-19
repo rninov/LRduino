@@ -1,6 +1,6 @@
 // Rotary Encoder
-int RotaryPosition[] = {63,63,63,63};
-int PrevPosition[] = {63,63,63,63};
+int RotaryPosition[NUM_SETTINGS] = {63,63,63,63,63};
+int PrevPosition[NUM_SETTINGS] = {63,63,63,63,63};
 
 volatile boolean TurnDetected;  // need volatile for Interrupts
 volatile boolean rotationdirection;  // CW or CCW rotation
