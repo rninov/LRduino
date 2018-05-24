@@ -14,7 +14,6 @@ LRduino depends on a number of tools to convert incoming serial into MIDI, which
 In future iterations of this project, the intention is to output MIDI directly over USB, negating the need for the Hairless-MIDIserial and LoopMIDI software.
 
 
-----
 ## Setup
 Clone this library and upload LRduino.ino to your Arduino UNO. The Baud Rate is 115200.
 
@@ -29,8 +28,11 @@ The rotary potentimeter (middle) changes the brightness of the LCD screen.
 Once this is setup, open LoopMIDI and open a port. 
 
 Open Hairless-MIDIserial and change the Baud rate to 115200 in the preferences. Select the Arduino UNO as an input, and the LoopMIDI port as an output. Tick "Debug MIDI Messages" and turn the rotary encoder - you should see:
+
 `+1.0 - Serial In: Ch 1: Controller 127 value 64`
+
 The value will change as you turn the encoder - this represents the selected adjustment value.
+
 Clicking the button will cycle the Channel `Ch` - this represents the selected adjustment. Currently, only 5 adjustments are available to be mapped.
 
 Open Lightroom and the MIDI2LR plugin. Turn the encoder, and map the input shown on MIDI2LR to the Lightroom adjustment shoown on the LCD. Click the button and repeat this process until all inputs channels are mapped. 
