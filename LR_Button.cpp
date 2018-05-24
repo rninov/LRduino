@@ -3,7 +3,7 @@
 #include <Bounce2.h>
 
 
-LR_Button::LR_Button(int pin, String adjustments[])
+LR_Button::LR_Button(int pin, String adjustments[], int adjustments_len)
 {
     // Initialise
     _DEBOUNCE_LAST = 0;
@@ -16,11 +16,9 @@ LR_Button::LR_Button(int pin, String adjustments[])
     _debouncer.interval(10); // interval in ms
 
     // Load adjustments
-    // _adjustments_len = sizeof(adjustments)/sizeof(adjustments[0]);
-    _adjustments_len = sizeof(adjustments);
+    _adjustments_len = adjustments_len;
     _adjustments = new String[_adjustments_len];
     _adjustments = adjustments;
-    // _adjustments = adjustments;
     _choice = 0;
 };
 
@@ -33,33 +31,11 @@ String LR_Button::getSelectedAdjustment()
 
     if ((_DEBOUNCE_CURRENT_VALUE == LOW) && (millis() - _DEBOUNCE_LAST >= _DEBOUNCE_PERIOD))
     {   
-        Serial.print("_adjustments_len: ");
-        Serial.print(_adjustments_len);
-        Serial.print("\n");
-        Serial.print("first element:: ");
-        Serial.print(_adjustments[0]);
-        Serial.print("\n");
-        Serial.print("second element: ");
-        Serial.print(_adjustments[1]);
-        Serial.print("\n");
-        Serial.print("third element: ");
-        Serial.print(_adjustments[3]);
-        Serial.print("\n");
-
         _choice = _choice + 1;
         
         if (_choice >= _adjustments_len) {
             _choice = 0;
         }
-
-        Serial.print("_choice: ");
-        Serial.print(_choice);
-        Serial.print("\n");
-
-        // Serial.print("Choice: ");
-        // Serial.print(choice);
-        // Serial.print("  Setting: ");
-        // Serial.println(settings[choice]);
 
         _DEBOUNCE_LAST = millis();
     };

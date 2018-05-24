@@ -7,23 +7,10 @@
 class LR_Button
 {
   public:
-    LR_Button(int pin, String adjustments[]);
+    LR_Button(int pin, String adjustments[], int adjustments_len);
     String getSelectedAdjustment();
     int getChoice();
   private:
-    // const int DEBOUNCE_PERIOD = 500;
-    // unsigned long BUTTON_0_DEBOUNCE_LAST = 0;
-    // const int NUM_SETTINGS = 5;
-    // String _settings[NUM_SETTINGS] = {
-    //     "Exposure",
-    //     "Contrast",
-    //     "Brightness",
-    //     "Shadows",
-    //     "Highlights",
-    //   };
-    
-    // int BUTTON_0_PIN = 0;
-
     // pin
     int _pin;
 

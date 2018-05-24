@@ -6,14 +6,17 @@
 // #include "encoder.h"
 // #include "midi_setup.h"
 
-#include "LR_button.h"
+#include "LR_Button.h"
+
 
 // // Debounce
 // Bounce debouncer = Bounce();
 
 // int choice = 0;
 String adj[] = {"Exposure", "Contrast", "Brightness", "Shadows", "Highlights"};
-LR_Button button0(0, adj );
+int adjlen = sizeof(adj) / sizeof(adj[0]);
+
+LR_Button button0(0, adj, adjlen);
 String selection = "";
 
 // int note = 127; //Max Note (range is 0-127)
