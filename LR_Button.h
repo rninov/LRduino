@@ -10,6 +10,7 @@ class LR_Button
     LR_Button(int pin, String adjustments[], int adjustments_len);
     String getSelectedAdjustment();
     int getChoice();
+
   private:
     // pin
     int _pin;
@@ -22,11 +23,8 @@ class LR_Button
 
     // Selection
     String* _adjustments;
-    // String *_adjustments;
     int _adjustments_len;
     int _choice;
 };
-
-
 
 #endif

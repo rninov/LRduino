@@ -1,22 +1,18 @@
-// #include <Bounce2.h>
-#include <LiquidCrystal.h>
+// #include <LiquidCrystal.h>
 // #include <MIDI.h>
 
-#include "display.h"
 // #include "encoder.h"
 // #include "midi_setup.h"
 
 #include "LR_Button.h"
+#include "LR_Display.h"
 
-
-// // Debounce
-// Bounce debouncer = Bounce();
-
-// int choice = 0;
 String adj[] = {"Exposure", "Contrast", "Brightness", "Shadows", "Highlights"};
 int adjlen = sizeof(adj) / sizeof(adj[0]);
 
 LR_Button button0(0, adj, adjlen);
+LR_Display display0(7, 8, 9, 10, 11, 12);
+
 String selection = "";
 
 // int note = 127; //Max Note (range is 0-127)
@@ -31,17 +27,12 @@ void setup()
     Serial.begin(115200);
     
     //Set up the LDCs number of columns and rows:
-    lcd.begin(16, 2);
+    // lcd.begin(16, 2);
     //Print a message to the LCD.
-    lcd.print(button0.getSelectedAdjustment());
+    // lcd.print(button0.getSelectedAdjustment());
     //Make progress characters
-    lcd = createLoadingBar(lcd);
+    // lcd = createLoadingBar(lcd);
     
-    // Button
-    // pinMode(BUTTON_0_PIN, INPUT_PULLUP); 
-    // debouncer.attach(BUTTON_0_PIN);
-    // debouncer.interval(10); // interval in ms
-
     // Rotary Encoder
     // pinMode(PinCLK,INPUT);
     // pinMode(PinDT,INPUT);  
@@ -53,33 +44,33 @@ void setup()
 
 void loop()
 {   
-    if (selection != button0.getSelectedAdjustment())
-    {
-        Serial.print("Selecton has changed from: ");
-        Serial.print(selection);
-        selection = button0.getSelectedAdjustment();
-        Serial.print(" to: ");
-        Serial.print(selection);
-        Serial.print("\n");
-        
-        //Set up the LCDs number of columns and rows:
-        lcd.setCursor(0,0);
-        lcd.print("                ");
-        lcd.setCursor(0,0);
+    selection = button0.getSelectedAdjustment();
 
-        lcd.print(selection);
-    }
+    display0.update(selection);
+
+    // if (selection != button0.getSelectedAdjustment())
+    // {
+    //     Serial.print("Selecton has changed from: ");
+    //     Serial.print(selection);
+    //     selection = button0.getSelectedAdjustment();
+    //     Serial.print(" to: ");
+    //     Serial.print(selection);
+    //     Serial.print("\n");
+        
+    //     //Set up the LCDs number of columns and rows:
+    //     // lcd.setCursor(0,0);
+    //     // lcd.print("                ");
+    //     // lcd.setCursor(0,0);
+
+    //     // lcd.print(selection);
+    // }
 
     //Move cursor to second line
-    lcd.setCursor(0,1);
-    //Clear the line each time it reaches the end
-    //with 16 " " (spaces)
-    lcd.print("                ");
+    // lcd.setCursor(0,1);
+    // //Clear the line each time it reaches the end
+    // //with 16 " " (spaces)
+    // lcd.print("                ");
     
-    // // Update the Bounce instance :
-    // debouncer.update();
-    // // Get the updated value :
-    // int BUTTON_0_VALUE = debouncer.read();
 
     // if ((BUTTON_0_VALUE == LOW) && (millis() - BUTTON_0_DEBOUNCE_LAST >= DEBOUNCE_PERIOD))
     // {   
