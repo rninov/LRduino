@@ -1,17 +1,18 @@
-// #include <LiquidCrystal.h>
 // #include <MIDI.h>
 
 // #include "encoder.h"
 // #include "midi_setup.h"
 
-#include "LR_Button.h"
-#include "LR_Display.h"
+#include "src/LR_Button.h"
+#include "src/LR_Display.h"
+#include "src/LR_Encoder.h"
 
 String adj[] = {"Exposure", "Contrast", "Brightness", "Shadows", "Highlights"};
 int adjlen = sizeof(adj) / sizeof(adj[0]);
 
 LR_Button button0(0, adj, adjlen);
 LR_Display display0(7, 8, 9, 10, 11, 12);
+LR_Encoder encoder0(2, 3, 4, adjlen);
 
 String selection = "";
 
@@ -25,20 +26,8 @@ void setup()
 {
     // MIDI.begin();
     Serial.begin(115200);
-    
-    //Set up the LDCs number of columns and rows:
-    // lcd.begin(16, 2);
-    //Print a message to the LCD.
-    // lcd.print(button0.getSelectedAdjustment());
-    //Make progress characters
-    // lcd = createLoadingBar(lcd);
-    
-    // Rotary Encoder
-    // pinMode(PinCLK,INPUT);
-    // pinMode(PinDT,INPUT);  
-    // pinMode(PinSW,INPUT);
-    // digitalWrite(PinSW, HIGH); // Pull-Up resistor for switch
-    // attachInterrupt (0,isr,FALLING); // interrupt 0 always connected to pin 2 on Arduino UNO
+
+    encoder0.setup(2);
   
 }
 
@@ -48,62 +37,7 @@ void loop()
 
     display0.update(selection);
 
-    // if (selection != button0.getSelectedAdjustment())
-    // {
-    //     Serial.print("Selecton has changed from: ");
-    //     Serial.print(selection);
-    //     selection = button0.getSelectedAdjustment();
-    //     Serial.print(" to: ");
-    //     Serial.print(selection);
-    //     Serial.print("\n");
-        
-    //     //Set up the LCDs number of columns and rows:
-    //     // lcd.setCursor(0,0);
-    //     // lcd.print("                ");
-    //     // lcd.setCursor(0,0);
-
-    //     // lcd.print(selection);
-    // }
-
-    //Move cursor to second line
-    // lcd.setCursor(0,1);
-    // //Clear the line each time it reaches the end
-    // //with 16 " " (spaces)
-    // lcd.print("                ");
-    
-
-    // if ((BUTTON_0_VALUE == LOW) && (millis() - BUTTON_0_DEBOUNCE_LAST >= DEBOUNCE_PERIOD))
-    // {   
-    
-        //Set up the LCDs number of columns and rows:
-        // lcd.setCursor(0,0);
-        // lcd.print("                ");
-        // lcd.setCursor(0,0);
-        //Print a message to the LCD.
-        // choice = choice + 1;
-
-        // if (choice >= NUM_SETTINGS) {
-        //     choice = 0;
-        // }
-
-        // Serial.print("Choice: ");
-        // Serial.print(choice);
-        // Serial.print("  Setting: ");
-        // Serial.println(settings[choice]);
-
-        // lcd.print(settings[choice]);
-
-    //     BUTTON_0_DEBOUNCE_LAST = millis();
-    // }
-
-    // Determine currently selected adjustment
-    
-
-    // //Move cursor to second line
-    // lcd.setCursor(0,1);
-    // //Clear the line each time it reaches the end
-    // //with 16 " " (spaces)
-    // lcd.print("                ");
+    encoder0.update(button0.getChoice());
 
     // channel = choice + 1;
     
