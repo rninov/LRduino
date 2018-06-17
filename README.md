@@ -1,8 +1,8 @@
 # LRduino
 
-LRduino is designed to be an open-source modular controller for Lightroom, powered by Arduino. Use buttons, rotary encoders, potentiometers and any other interface to offer ultimate control over your photo post-processing.
+LRduino is designed to be an open-source modular controller for photo post-processing software, such as Lightroom. Use buttons, rotary encoders, potentiometers and any other interface to offer ultimate control over your photo editing.
 
-LRduino is currently in very early stages of development.
+LRduino is initially designed for Arduino, and is currently in very early stages of development.
 
 
 ## Prerequisites
@@ -44,6 +44,7 @@ Open a photo, and start editing!
 ## License
 
 LRDuino - The open-source modular controller for photo post-processing
+
 Copyright (C) 2018  Ben Trew
 
 This program is free software: you can redistribute it and/or modify
