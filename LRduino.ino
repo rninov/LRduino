@@ -1,5 +1,5 @@
 /*
-    LRDuino - The open-source modular controller for Lightroom, powered by Arduino
+    LRDuino - The open-source modular controller for photo post-processing
     Copyright (C) 2018  Ben Trew
 
     This program is free software: you can redistribute it and/or modify
@@ -18,15 +18,10 @@
     https://github.com/Bixx
 */
 
-
-// #include <MIDI.h>
-
-// #include "encoder.h"
-// #include "midi_setup.h"
-
 #include "src/LR_Button.h"
 #include "src/LR_Display.h"
 #include "src/LR_Encoder.h"
+#include "src/LR_MIDI_Interface.h"
 
 String adj[] = {"Exposure", "Contrast", "Brightness", "Shadows", "Highlights"};
 int adjlen = sizeof(adj) / sizeof(adj[0]);
@@ -34,67 +29,45 @@ int adjlen = sizeof(adj) / sizeof(adj[0]);
 LR_Button button0(0, adj, adjlen);
 LR_Display display0(7, 8, 9, 10, 11, 12);
 LR_Encoder encoder0(2, 3, 4, adjlen);
+// LR_MIDI_Interface midi0;
 
-String selection = "";
+struct MIDISettings : public midi::DefaultSettings
+{
+    static const long BaudRate = 115200;
+};
+MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial, MIDI, MIDISettings);
 
-// int note = 127; //Max Note (range is 0-127)
-// int velocity = 63; //Mid Velocity (range is 0-127)
-// // int channel = choice + 1; //MIDI Channel 1 (out of 16)
-// int channel = 1; //MIDI Channel 1 (out of 16)
+int _note;
+int _velocity; 
+int _channel;
+int _velocity_prev; 
+int _channel_prev;
 
-// MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial, MIDI, MySettings);
 void setup()
 {
-    // MIDI.begin();
-    Serial.begin(115200);
+    // Serial.begin(115200);
+    MIDI.begin();
 
-    encoder0.setup(2);
-  
+    _note = 127;
+    _velocity = 64;
+    _channel = 1;
+    _velocity_prev = 64;
+    _channel_prev = 1;
 }
 
 void loop()
 {   
-    selection = button0.getSelectedAdjustment();
 
-    display0.update(selection);
+    display0.update(button0.getSelectedAdjustment());
 
-    encoder0.update(button0.getChoice());
+    // midi0.updateAdjustment(button0.getChoice(), encoder0.update(button0.getChoice()));
+    _channel = button0.getChoice() + 1;
+    _velocity = encoder0.update(button0.getChoice());
 
-    // channel = choice + 1;
-    
-    // // Rotary Encoder
-    // if (!(digitalRead(PinSW))) {   // check if button is pressed
-    //     if (RotaryPosition[channel] == 63) {  // check if button was already pressed
-    //     } else {
-    //         RotaryPosition[channel]=63; // Reset position to ZERO
-    //         // MIDI.sendControlChange(note, RotaryPosition, channel);
-    //         MIDI.sendNoteOn(note, RotaryPosition[channel], channel);
-    //     }
-    // }
-    // // Runs if rotation was detected
-    // if (TurnDetected)  {
-    //     PrevPosition[channel] = RotaryPosition[channel]; // Save previous position in variable
-    //     if (rotationdirection) {
-    //         RotaryPosition[channel]=RotaryPosition[channel]-1; // decrease Position by 1
-    //         // Serial.print("RotaryPosition[channel]: ");
-    //         // Serial.println(RotaryPosition[channel]);
-    //     }
-        
-    //     else {
-    //         RotaryPosition[channel]=RotaryPosition[channel]+1; // increase Position by 1
-    //         // Serial.print("RotaryPosition[channel]: ");
-    //         // Serial.println(RotaryPosition[channel]);
-    //     }
+    if (!((_velocity_prev == _velocity) && (_channel_prev = _channel))) {
+        MIDI.sendNoteOn(_note, _velocity, _channel);
+        _velocity_prev = _velocity;
+        _channel_prev = _channel;
+    }
 
-    //     TurnDetected = false;  // do NOT repeat IF loop until new rotation detected
-
-    //     // Which direction to move
-    //     if ((PrevPosition[channel] + 1) == RotaryPosition[channel]) { // Move motor CW
-    //         MIDI.sendControlChange(note, RotaryPosition[channel], channel);
-    //     }
-
-    //     if ((RotaryPosition[channel] + 1) == PrevPosition[channel]) { // Move motor CCW
-    //         MIDI.sendControlChange(note, RotaryPosition[channel], channel);
-    //     }
-    // }
 }

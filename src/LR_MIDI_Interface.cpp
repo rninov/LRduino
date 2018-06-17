@@ -1,5 +1,5 @@
 /*
-    LRDuino - The open-source modular controller for Lightroom, powered by Arduino
+    LRDuino - The open-source modular controller for photo post-processing
     Copyright (C) 2018  Ben Trew
 
     This program is free software: you can redistribute it and/or modify
@@ -18,14 +18,21 @@
     https://github.com/Bixx
 */
 
-// MIDI
+#include "Arduino.h"
+#include "LR_MIDI_Interface.h"
 #include <MIDI.h>
 
-struct MySettings : public midi::DefaultSettings
+LR_MIDI_Interface::LR_MIDI_Interface()
 {
-  static const long BaudRate = 115200;
+    _note = 127; // Max Note (range 0-127) - will remain fixed
+    _velocity = 64; // Mid Velocity (range 0-127) - changes adjustment value
+    _channel = 1; // MIDI Channel (1-16) - changes adjustment
+    
 };
 
-// int note = 127; //Max Note (range is 0-127)
-// int velocity = 63; //Mid Velocity (range is 0-127)
-// int channel = 1; //MIDI Channel 1 (out of 16)
+// void LR_MIDI_Interface::updateAdjustment(int choice, int adjValue)
+// {
+//     _velocity = adjValue;
+//     _channel = choice + 1;
+//     MIDI.sendNoteOn(_note, _velocity, _channel);
+// }

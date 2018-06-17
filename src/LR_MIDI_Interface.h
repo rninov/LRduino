@@ -18,31 +18,23 @@
     https://github.com/Bixx
 */
 
-#ifndef LR_Display_h
-#define LR_Display_h
+#ifndef LR_MIDI_Interface_h
+#define LR_MIDI_Interface_h
 
 #include "Arduino.h"
-#include <LiquidCrystal.h>
+#include <MIDI.h>
 
-class LR_Display
+class LR_MIDI_Interface
 {
   public:
-    LR_Display(int pin0, int pin1, int pin2, int pin3, int pin4, int pin5);
-    void update(String selected_adjustment);
+    LR_MIDI_Interface();
+    // void updateAdjustment(int choice, int adjValue);
 
-  private:
-    // Pins
-    int _pin0;
-    int _pin1;
-    int _pin2;
-    int _pin3;
-    int _pin4;
-    int _pin5;
-
-    // LCD
-    LiquidCrystal *_lcd;
-    String _selected_adjustment;
-      
+  private:   
+    int _note; // Max Note (range 0-127) - will remain fixed
+    int _velocity; // Mid Velocity (range 0-127) - changes adjustment value
+    int _channel; // MIDI Channel (1-16) - changes adjustment
 };
+
 
 #endif

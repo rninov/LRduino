@@ -1,5 +1,5 @@
 /*
-    LRDuino - The open-source modular controller for Lightroom, powered by Arduino
+    LRDuino - The open-source modular controller for photo post-processing
     Copyright (C) 2018  Ben Trew
 
     This program is free software: you can redistribute it and/or modify
@@ -22,13 +22,13 @@
 #define LR_Encoder_h
 
 #include "Arduino.h"
+#include <Encoder.h>
 
 class LR_Encoder
 {
   public:
     LR_Encoder(int pinCLK, int pinDT, int pinSW, int adjustments_len);
-    void update(int choice);
-    void setup(int pin);
+    int update(int choice);
   private:
 
     // Pins
@@ -39,20 +39,11 @@ class LR_Encoder
     // Selection
     int _adjustments_len;
     int _choice;
-    int _channel;
 
     // Encoder
-    int *_RotaryPosition;
-    int *_PrevPosition;
-    
-    volatile boolean _TurnDetected;
-    volatile boolean _rotationdirection;
-
-    void isr();
-    // void* _isr;
-    
+    Encoder* _enc;
+    int* _position;
 };
-
 
 
 #endif
