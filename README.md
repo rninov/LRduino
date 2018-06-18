@@ -2,7 +2,7 @@
 
 LRduino is designed to be an open-source modular controller for photo post-processing software, such as Lightroom. Use buttons, rotary encoders, potentiometers and any other interface to offer ultimate control over your photo editing.
 
-LRduino is initially designed for Arduino, and is currently in very early stages of development.
+LRduino is initially designed for use on Arduino, and is currently in very early stages of development.
 
 
 ## Prerequisites
@@ -11,11 +11,11 @@ LRduino depends on a number of tools to convert incoming serial into MIDI, which
 - [LoopMIDI](https://www.tobias-erichsen.de/software/loopmidi.html)
 - [MIDI2LR](https://rsjaffe.github.io/MIDI2LR/)
 
-In future iterations of this project, the intention is to output MIDI directly over USB, negating the need for the Hairless-MIDIserial and LoopMIDI software.
+In future iterations of this project, the intention is to output MIDI directly over USB (e.g. Teensy), negating the need for the Hairless-MIDIserial and LoopMIDI software.
 
 
 ## Setup
-Clone this library and upload LRduino.ino to your Arduino UNO. The Baud Rate is 115200.
+Clone this library and upload the LRduino.ino example to your Arduino UNO. The Baud Rate is 115200.
 
 The following wiring diagram will offer two interfaces to Lightroom:
 - A button, which selects the adjustment to be made (e.g. exposure, shadow, etc.). The selected adjustment is shown on the LCD.
