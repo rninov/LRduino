@@ -1,5 +1,5 @@
 /*
-    LRDuino - The open-source modular controller for photo post-processing
+    LRduino - The open-source modular controller for photo post-processing
     Copyright (C) 2018  Ben Trew
 
     This program is free software: you can redistribute it and/or modify

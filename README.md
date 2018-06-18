@@ -43,7 +43,7 @@ Open a photo, and start editing!
 
 ## License
 
-LRDuino - The open-source modular controller for photo post-processing
+LRduino - The open-source modular controller for photo post-processing
 
 Copyright (C) 2018  Ben Trew
 
