@@ -58,7 +58,6 @@ String LR_Button::getSelectedAdjustment()
         }
 
         _DEBOUNCE_LAST = millis();
-        Serial.print("Pushed");
     };
 
     return _adjustments[_choice];

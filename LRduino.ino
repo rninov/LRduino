@@ -18,10 +18,9 @@
     https://github.com/Bixx
 */
 
-#include "LR_Button.h"
-#include "LR_Display.h"
-#include "LR_Encoder.h"
-#include "LR_MIDI_Interface.h"
+#include "src/LR_Button.h"
+#include "src/LR_Display.h"
+#include "src/LR_Encoder.h"
 
 String adj[] = {"Exposure", "Contrast", "Brightness", "Shadows", "Highlights"};
 int adjlen = sizeof(adj) / sizeof(adj[0]);
@@ -29,8 +28,8 @@ int adjlen = sizeof(adj) / sizeof(adj[0]);
 LR_Button button0(0, adj, adjlen);
 LR_Display display0(7, 8, 9, 10, 11, 12);
 LR_Encoder encoder0(2, 3, 4, adjlen);
-// LR_MIDI_Interface midi0;
 
+// To be moved into library
 struct MIDISettings : public midi::DefaultSettings
 {
     static const long BaudRate = 115200;
@@ -42,17 +41,18 @@ int _velocity;
 int _channel;
 int _velocity_prev; 
 int _channel_prev;
+// \ To be moved into library
 
 void setup()
 {
-    // Serial.begin(115200);
+    // To be moved into library
     MIDI.begin();
-
     _note = 127;
     _velocity = 64;
     _channel = 1;
     _velocity_prev = 64;
     _channel_prev = 1;
+    // \ To be moved into library
 }
 
 void loop()
@@ -60,14 +60,15 @@ void loop()
 
     display0.update(button0.getSelectedAdjustment());
 
-    // midi0.updateAdjustment(button0.getChoice(), encoder0.update(button0.getChoice()));
     _channel = button0.getChoice() + 1;
     _velocity = encoder0.update(button0.getChoice());
 
+    // To be moved into library
     if (!((_velocity_prev == _velocity) && (_channel_prev = _channel))) {
         MIDI.sendNoteOn(_note, _velocity, _channel);
         _velocity_prev = _velocity;
         _channel_prev = _channel;
     }
+    // \ To be moved into library
 
 }
