@@ -33,7 +33,9 @@ Open Hairless-MIDIserial and change the Baud rate to 115200 in the preferences. 
 
 The value will change as you turn the encoder - this represents the selected adjustment value.
 
-Clicking the button will cycle the Channel `Ch` - this represents the selected adjustment. Currently, only 5 adjustments are available to be mapped.
+Clicking the button will cycle the Channel `Ch` - this represents the selected adjustment. By default, 5 adjustments are available to be mapped - these can be configured in LRduino.ino:
+
+`String adj[] = {"Exposure", "Contrast", "Brightness", "Shadows", "Highlights"};`
 
 Open Lightroom and the MIDI2LR plugin. Turn the encoder, and map the input shown on MIDI2LR to the Lightroom adjustment shoown on the LCD. Click the button and repeat this process until all inputs channels are mapped. 
 

@@ -21,6 +21,7 @@
 #include "src/LR_Button.h"
 #include "src/LR_Display.h"
 #include "src/LR_Encoder.h"
+#include <MIDI.h>
 
 String adj[] = {"Exposure", "Contrast", "Brightness", "Shadows", "Highlights"};
 int adjlen = sizeof(adj) / sizeof(adj[0]);
