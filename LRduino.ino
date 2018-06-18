@@ -1,119 +1,75 @@
-#include <Bounce2.h>
-#include <LiquidCrystal.h>
+/*
+    LRduino - The open-source modular controller for photo post-processing
+    Copyright (C) 2018  Ben Trew
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    https://github.com/Bixx
+*/
+
+#include "src/LR_Button.h"
+#include "src/LR_Display.h"
+#include "src/LR_Encoder.h"
 #include <MIDI.h>
 
-#include "display.h"
-#include "button.h"
-#include "encoder.h"
-#include "midi_setup.h"
+String adj[] = {"Exposure", "Contrast", "Brightness", "Shadows", "Highlights"};
+int adjlen = sizeof(adj) / sizeof(adj[0]);
 
-// Debounce
-Bounce debouncer = Bounce();
+LR_Button button0(0, adj, adjlen);
+LR_Display display0(7, 8, 9, 10, 11, 12);
+LR_Encoder encoder0(2, 3, 4, adjlen);
 
-int choice = 0;
-int note = 127; //Max Note (range is 0-127)
-int velocity = 63; //Mid Velocity (range is 0-127)
-int channel = choice + 1; //MIDI Channel 1 (out of 16)
+// To be moved into library
+struct MIDISettings : public midi::DefaultSettings
+{
+    static const long BaudRate = 115200;
+};
+MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial, MIDI, MIDISettings);
 
-MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial, MIDI, MySettings);
+int _note;
+int _velocity; 
+int _channel;
+int _velocity_prev; 
+int _channel_prev;
+// \ To be moved into library
+
 void setup()
 {
+    // To be moved into library
     MIDI.begin();
-    // Serial.begin(115200);
-    
-    //Set up the LDCs number of columns and rows:
-    lcd.begin(16, 2);
-    //Print a message to the LCD.
-    lcd.print(settings[choice]);
-    //Make progress characters
-    lcd = createLoadingBar(lcd);
-    
-    // Button
-    pinMode(BUTTON_0_PIN, INPUT_PULLUP); 
-    debouncer.attach(BUTTON_0_PIN);
-    debouncer.interval(10); // interval in ms
-
-    // Rotary Encoder
-    pinMode(PinCLK,INPUT);
-    pinMode(PinDT,INPUT);  
-    pinMode(PinSW,INPUT);
-    digitalWrite(PinSW, HIGH); // Pull-Up resistor for switch
-    attachInterrupt (0,isr,FALLING); // interrupt 0 always connected to pin 2 on Arduino UNO
-  
+    _note = 127;
+    _velocity = 64;
+    _channel = 1;
+    _velocity_prev = 64;
+    _channel_prev = 1;
+    // \ To be moved into library
 }
 
 void loop()
 {   
-    // Update the Bounce instance :
-    debouncer.update();
-    // Get the updated value :
-    int BUTTON_0_VALUE = debouncer.read();
 
-    if ((BUTTON_0_VALUE == LOW) && (millis() - BUTTON_0_DEBOUNCE_LAST >= DEBOUNCE_PERIOD))
-    {   
+    display0.update(button0.getSelectedAdjustment());
 
-        //Set up the LCDs number of columns and rows:
-        lcd.setCursor(0,0);
-        lcd.print("                ");
-        lcd.setCursor(0,0);
-        //Print a message to the LCD.
-        choice = choice + 1;
+    _channel = button0.getChoice() + 1;
+    _velocity = encoder0.update(button0.getChoice());
 
-        if (choice >= NUM_SETTINGS) {
-            choice = 0;
-        }
-
-        // Serial.print("Choice: ");
-        // Serial.print(choice);
-        // Serial.print("  Setting: ");
-        // Serial.println(settings[choice]);
-
-        lcd.print(settings[choice]);
-
-        BUTTON_0_DEBOUNCE_LAST = millis();
+    // To be moved into library
+    if (!((_velocity_prev == _velocity) && (_channel_prev = _channel))) {
+        MIDI.sendNoteOn(_note, _velocity, _channel);
+        _velocity_prev = _velocity;
+        _channel_prev = _channel;
     }
+    // \ To be moved into library
 
-    //Move cursor to second line
-    lcd.setCursor(0,1);
-    //Clear the line each time it reaches the end
-    //with 16 " " (spaces)
-    lcd.print("                ");
-
-    channel = choice + 1;
-    
-    // Rotary Encoder
-    if (!(digitalRead(PinSW))) {   // check if button is pressed
-        if (RotaryPosition[channel] == 63) {  // check if button was already pressed
-        } else {
-            RotaryPosition[channel]=63; // Reset position to ZERO
-            // MIDI.sendControlChange(note, RotaryPosition, channel);
-            MIDI.sendNoteOn(note, RotaryPosition[channel], channel);
-        }
-    }
-    // Runs if rotation was detected
-    if (TurnDetected)  {
-        PrevPosition[channel] = RotaryPosition[channel]; // Save previous position in variable
-        if (rotationdirection) {
-            RotaryPosition[channel]=RotaryPosition[channel]-1; // decrease Position by 1
-            // Serial.print("RotaryPosition[channel]: ");
-            // Serial.println(RotaryPosition[channel]);
-        }
-        
-        else {
-            RotaryPosition[channel]=RotaryPosition[channel]+1; // increase Position by 1
-            // Serial.print("RotaryPosition[channel]: ");
-            // Serial.println(RotaryPosition[channel]);
-        }
-
-        TurnDetected = false;  // do NOT repeat IF loop until new rotation detected
-
-        // Which direction to move
-        if ((PrevPosition[channel] + 1) == RotaryPosition[channel]) { // Move motor CW
-            MIDI.sendControlChange(note, RotaryPosition[channel], channel);
-        }
-
-        if ((RotaryPosition[channel] + 1) == PrevPosition[channel]) { // Move motor CCW
-            MIDI.sendControlChange(note, RotaryPosition[channel], channel);
-        }
-    }
 }
