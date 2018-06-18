@@ -18,10 +18,10 @@
     https://github.com/Bixx
 */
 
-#include "src/LR_Button.h"
-#include "src/LR_Display.h"
-#include "src/LR_Encoder.h"
-#include "src/LR_MIDI_Interface.h"
+#include "LR_Button.h"
+#include "LR_Display.h"
+#include "LR_Encoder.h"
+#include "LR_MIDI_Interface.h"
 
 String adj[] = {"Exposure", "Contrast", "Brightness", "Shadows", "Highlights"};
 int adjlen = sizeof(adj) / sizeof(adj[0]);
